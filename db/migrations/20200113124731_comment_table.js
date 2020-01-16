@@ -6,7 +6,10 @@ exports.up = function(knex) {
       .unique();
     comment_table.string("author").references("users.username");
     comment_table.integer("article_id").references("articles.article_id");
-    comment_table.integer("votes");
+    comment_table
+      .integer("votes")
+      .notNullable()
+      .defaultTo(0);
     comment_table.timestamp("created_at");
     comment_table.text("body");
   });
