@@ -1,8 +1,21 @@
 const {
+  selectArticles,
   selectArticlesById,
   updateArticlesById,
-  insertCommentsByArtId
+  insertCommentsByArtId,
+  SelectCommentsByArtId
 } = require("../models/articles-model");
+
+const getArticles = (req, res, next) => {
+  selectArticles(req.query)
+    .then(articles => {
+      res.status(200).send({ articles });
+    })
+    .catch(err => {
+      console.log(err, "error in getArticles");
+      next(err);
+    });
+};
 
 const getArticlesById = (req, res, next) => {
   //{articles.article_id: 1}
@@ -36,8 +49,27 @@ const postCommentsByArtId = (req, res, next) => {
       res.status(201).send({ comments });
     })
     .catch(err => {
-      console.log(err, "error in postComments");
+      // console.log(err, "error in postComments");
       next(err);
     });
 };
-module.exports = { getArticlesById, patchArticlesById, postCommentsByArtId };
+
+const getCommentsByArtId = (req, res, next) => {
+  console.log(req.query);
+  SelectCommentsByArtId(req.params, req.query)
+    .then(comments => {
+      res.status(200).send({ comments });
+    })
+    .catch(err => {
+      console.log(err, "error in getCommentsByArtId");
+      next(err);
+    });
+};
+
+module.exports = {
+  getArticles,
+  getArticlesById,
+  patchArticlesById,
+  postCommentsByArtId,
+  getCommentsByArtId
+};

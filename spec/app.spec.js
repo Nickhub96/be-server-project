@@ -51,6 +51,30 @@ describe("app", () => {
       });
     });
     describe("/articles", () => {
+      it("GET:200 responds with an array of article objects with all the correct properties that has been filtered by author name", () => {
+        return request(app)
+          .get(
+            "/api/articles?sort_by=created_at&order_by=desc&author=rogersop&topic=mitch"
+          )
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles).to.be.sortedBy("created_at", {
+              descending: true
+            });
+            expect(res.body.articles[0]).to.have.keys(
+              "article_id",
+              "title",
+              "body",
+              "votes",
+              "author",
+              "topic",
+              "created_at",
+              "comment_count"
+            );
+            expect(res.body.articles[0].author).to.equal("rogersop");
+            expect(res.body.articles[0].topic).to.equal("mitch");
+          });
+      });
       describe("/:article_id", () => {
         it("GET:200 responds with a single article when given a correct article_id", () => {
           return request(app)
@@ -130,16 +154,44 @@ describe("app", () => {
                 );
               });
           });
-          it.only("POST:400 responds with an error message when an incomplete post request is provided", () => {
+          it("POST:400 responds with an error message when an incomplete post request is provided", () => {
             return request(app)
               .post("/api/articles/2/comments")
               .send({ author: "gazza", comment: "please dont work" })
               .expect(400)
               .then(res => {
-                console.log(res.status);
                 expect(res.body.msg).to.equal("Bad Request");
               });
           });
+          it("POST:404 responds with the correct error message when an invalid url", () => {
+            return request(app)
+              .post("/api/articles/3/commentzzzz")
+              .send({ author: "rogersop", comment: "please dont work" })
+              .expect(404)
+              .then(res => {
+                expect(res.body.msg).to.equal("Route Not Found");
+              });
+          });
+          it("GET:200 responds with an array of comments from the given article_id", () => {
+            return request(app)
+              .get("/api/articles/5/comments?sort_by=created_at&order_by=desc")
+              .expect(200)
+              .then(res => {
+                expect(res.body.comments).to.be.an("array");
+                expect(res.body.comments).to.be.sortedBy("created_at", {
+                  descending: true
+                });
+              });
+          });
+        });
+      });
+    });
+    describe("/comments", () => {
+      describe("/:comment_id", () => {
+        it("PATCH:200 responds with the updated comment that has been patched", () => {
+          return request(app)
+            .patch("/api/comments/4")
+            .send({ inc_votes: 6 });
         });
       });
     });

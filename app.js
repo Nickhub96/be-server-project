@@ -1,36 +1,20 @@
 const express = require("express");
 const apiRouter = require("./routes/api-router");
 const app = express();
+const {
+  routeErrors,
+  customErrorHandler,
+  psqlErrorHandler,
+  fiveHundredErrorHandler
+} = require("./errors/index");
 
 app.use(express.json());
 
 app.use("/api", apiRouter);
+app.use("/*", routeErrors);
+app.use(customErrorHandler);
+app.use(psqlErrorHandler);
 
-app.use((err, req, res, next) => {
-  if (err.status) {
-    res.status(err.status).send({ msg: err.msg });
-  } else {
-    next(err);
-  }
-});
-
-app.use((err, req, res, next) => {
-  if (err.code) {
-    const psqlCode = {
-      "22P02": "Bad Request",
-      "42703": "Undefined Column",
-      "23503": "Bad Request"
-    };
-    res.status(400).send({
-      msg: psqlCode[err.code]
-    });
-  } else {
-    next(err);
-  }
-});
-
-app.use((err, req, res, next) => {
-  res.status(500).send({ msg: "server error" });
-});
+app.use(fiveHundredErrorHandler);
 
 module.exports = app;
