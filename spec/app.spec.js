@@ -191,7 +191,12 @@ describe("app", () => {
         it("PATCH:200 responds with the updated comment that has been patched", () => {
           return request(app)
             .patch("/api/comments/4")
-            .send({ inc_votes: 6 });
+            .send({ inc_votes: 6 })
+            .expect(200)
+            .then(res => {
+              expect(res.body.comments[0].comment_id).to.equal(4);
+              expect(res.body.comments[0].votes).to.equal(-94);
+            });
         });
       });
     });
