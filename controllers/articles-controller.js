@@ -18,11 +18,9 @@ const getArticles = (req, res, next) => {
 };
 
 const getArticlesById = (req, res, next) => {
-  //{articles.article_id: 1}
-
   selectArticlesById(req.params)
-    .then(articles => {
-      res.status(200).send({ articles });
+    .then(([article]) => {
+      res.status(200).send({ article });
     })
     .catch(err => {
       console.log(err, "error in getArticleById");
@@ -32,9 +30,8 @@ const getArticlesById = (req, res, next) => {
 
 const patchArticlesById = (req, res, next) => {
   updateArticlesById(req.body, req.params)
-    .then(articles => {
-      console.log(articles);
-      res.status(200).send({ articles });
+    .then(([article]) => {
+      res.status(200).send({ article });
     })
     .catch(err => {
       console.log(err, "error in patchArticlesById");
@@ -45,17 +42,16 @@ const patchArticlesById = (req, res, next) => {
 const postCommentsByArtId = (req, res, next) => {
   // console.log(req.body, "Hello controller");
   insertCommentsByArtId(req.body, req.params)
-    .then(comments => {
-      res.status(201).send({ comments });
+    .then(([comment]) => {
+      res.status(201).send({ comment });
     })
     .catch(err => {
-      // console.log(err, "error in postComments");
+      console.log(err, "error in postComments");
       next(err);
     });
 };
 
 const getCommentsByArtId = (req, res, next) => {
-  console.log(req.query);
   SelectCommentsByArtId(req.params, req.query)
     .then(comments => {
       res.status(200).send({ comments });

@@ -29,9 +29,14 @@ const fiveHundredErrorHandler = (err, req, res, next) => {
   res.status(500).send({ msg: "server error" });
 };
 
+const send405Error = (req, res, next) => {
+  res.status(405).send({ msg: "Method Not Found" });
+};
+
 module.exports = {
   routeErrors,
   customErrorHandler,
   psqlErrorHandler,
-  fiveHundredErrorHandler
+  fiveHundredErrorHandler,
+  send405Error
 };

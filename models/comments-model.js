@@ -6,7 +6,7 @@ const updateCommentsById = (body, params) => {
   console.log(comment_id, inc_votes);
   return connection("comments")
     .where("comments.comment_id", comment_id)
-    .increment("votes", inc_votes)
+    .increment("votes", inc_votes || 0)
     .returning("*")
     .then(res => {
       console.log(res);
@@ -18,4 +18,13 @@ const updateCommentsById = (body, params) => {
     });
 };
 
-module.exports = { updateCommentsById };
+const removeCommentById = params => {
+  const { comment_id } = params;
+  console.log(comment_id);
+  return connection("comments")
+    .where("comments.comment_id", comment_id)
+    .del()
+    .returning("*");
+};
+
+module.exports = { updateCommentsById, removeCommentById };

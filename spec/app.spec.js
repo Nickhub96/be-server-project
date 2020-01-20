@@ -32,9 +32,9 @@ describe("app", () => {
           .get("/api/users/butter_bridge")
           .expect(200)
           .then(res => {
-            expect(res.body.users).to.be.an("array");
-            expect(res.body.users[0].username).to.equal("butter_bridge");
-            expect(res.body.users[0]).to.contain.keys(
+            expect(res.body.user).to.be.an("object");
+            expect(res.body.user.username).to.equal("butter_bridge");
+            expect(res.body.user).to.contain.keys(
               "username",
               "avatar_url",
               "name"
@@ -54,7 +54,7 @@ describe("app", () => {
       it("GET:200 responds with an array of article objects with all the correct properties that has been filtered by author name", () => {
         return request(app)
           .get(
-            "/api/articles?sort_by=created_at&order_by=desc&author=rogersop&topic=mitch"
+            "/api/articles?sort_by=created_at&order=desc&author=rogersop&topic=mitch"
           )
           .expect(200)
           .then(res => {
@@ -75,15 +75,40 @@ describe("app", () => {
             expect(res.body.articles[0].topic).to.equal("mitch");
           });
       });
+      it("GET:200 return an empty array when there is an author with no articles", () => {
+        return request(app)
+          .get("/api/articles?author=lurker")
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles).to.eql([]);
+          });
+      });
+      it("GET:200 returns an empty array when there is a topic with no articles", () => {
+        return request(app)
+          .get("/api/articles?topic=paper")
+          .expect(200)
+          .then(res => {
+            expect(res.body.articles).to.eql([]);
+          });
+      });
+      it("GET: 404 responds with the correct error message when given a url that doesnt exist yet", () => {
+        return request(app)
+          .get("/api/articles?sort_by=created_at&order=desc&author=rogerplop")
+          .expect(404)
+          .then(res => {
+            expect(res.body.msg).to.equal("Not Found");
+          });
+      });
       describe("/:article_id", () => {
         it("GET:200 responds with a single article when given a correct article_id", () => {
           return request(app)
             .get("/api/articles/2")
             .expect(200)
             .then(res => {
-              expect(res.body.articles).to.be.an("array");
-              expect(res.body.articles[0].article_id).to.equal(2);
-              expect(res.body.articles[0]).to.contain.keys(
+              console.log(res.body);
+              expect(res.body.article).to.be.an("object");
+              expect(res.body.article.article_id).to.equal(2);
+              expect(res.body.article).to.contain.keys(
                 "article_id",
                 "title",
                 "body",
@@ -101,9 +126,9 @@ describe("app", () => {
             .send({ inc_votes: 6 })
             .expect(200)
             .then(res => {
-              expect(res.body.articles[0].article_id).to.equal(2);
-              expect(res.body.articles[0].votes).to.equal(6);
-              expect(res.body.articles[0]).to.contain.keys(
+              expect(res.body.article.article_id).to.equal(2);
+              expect(res.body.article.votes).to.equal(6);
+              expect(res.body.article).to.contain.keys(
                 "article_id",
                 "title",
                 "body",
@@ -112,6 +137,46 @@ describe("app", () => {
                 "author"
               );
             });
+        });
+        it("PATCH:200 responds with the article unchanged", () => {
+          return request(app)
+            .patch("/api/articles/1")
+            .send()
+            .expect(200)
+            .then(res => {
+              expect(res.body.article.article_id).to.equal(1);
+              expect(res.body.article.votes).to.equal(100);
+              expect(res.body.article).to.contain.keys(
+                "article_id",
+                "title",
+                "body",
+                "votes",
+                "topic",
+                "author"
+              );
+            });
+        });
+        // it.only("GET:405 responds with the article unchanged", () => {
+        //   return request(app)
+        //     .get("/api/articles/1")
+        //     .send()
+        //     .expect(405)
+        //     .then(res => {
+        //       expect(res.body.msg).to.equal("Method Not Found");
+        //     });
+        // });
+        it.only("status:405", () => {
+          const invalidMethods = ["delete"];
+          const methodPromises = invalidMethods.map(method => {
+            return request(app)
+              [method]("/api/articles/1")
+              .expect(405)
+              .then(({ body: { msg } }) => {
+                expect(msg).to.equal("Method Not Found");
+              });
+          });
+          // methodPromises -> [ Promise { <pending> }, Promise { <pending> }, Promise { <pending> } ]
+          return Promise.all(methodPromises);
         });
         it("GET:400 responds with the correct error message when given an invalid article_id", () => {
           return request(app)
@@ -140,7 +205,7 @@ describe("app", () => {
               })
               .expect(201)
               .then(res => {
-                expect(res.body.comments[0]).to.have.keys(
+                expect(res.body.comment).to.have.keys(
                   "comment_id",
                   "author",
                   "article_id",
@@ -148,8 +213,8 @@ describe("app", () => {
                   "created_at",
                   "body"
                 );
-                expect(res.body.comments).to.be.an("array");
-                expect(res.body.comments[0].body).to.contain(
+                expect(res.body.comment).to.be.an("object");
+                expect(res.body.comment.body).to.contain(
                   "This is just a short comment that I want to add to check my test works, and im able to post comments when I use an article id to do so. Hope this works."
                 );
               });
@@ -174,13 +239,21 @@ describe("app", () => {
           });
           it("GET:200 responds with an array of comments from the given article_id", () => {
             return request(app)
-              .get("/api/articles/5/comments?sort_by=created_at&order_by=desc")
+              .get("/api/articles/5/comments?sort_by=created_at&order=desc")
               .expect(200)
               .then(res => {
                 expect(res.body.comments).to.be.an("array");
                 expect(res.body.comments).to.be.sortedBy("created_at", {
                   descending: true
                 });
+              });
+          });
+          it("GET:200 returns an empty array when there is a topic with no articles", () => {
+            return request(app)
+              .get("/api/articles/2/comments")
+              .expect(200)
+              .then(res => {
+                expect(res.body.comments).to.eql([]);
               });
           });
         });
@@ -194,9 +267,14 @@ describe("app", () => {
             .send({ inc_votes: 6 })
             .expect(200)
             .then(res => {
-              expect(res.body.comments[0].comment_id).to.equal(4);
-              expect(res.body.comments[0].votes).to.equal(-94);
+              expect(res.body.comment.comment_id).to.equal(4);
+              expect(res.body.comment.votes).to.equal(-94);
             });
+        });
+        it("DELETE:204 succesfully deletes the comment when given a comment_id", () => {
+          return request(app)
+            .delete("/api/comments/1")
+            .expect(204);
         });
       });
     });

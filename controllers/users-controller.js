@@ -2,8 +2,8 @@ const { selectUsersById } = require("../models/users-model");
 
 const getUsersById = (req, res, next) => {
   selectUsersById(req.params)
-    .then(users => {
-      res.status(200).send({ users });
+    .then(([user]) => {
+      res.status(200).send({ user });
     })
     .catch(err => {
       // console.log(err, "error in getUsersById");

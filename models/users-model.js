@@ -13,4 +13,17 @@ const selectUsersById = id => {
     });
 };
 
-module.exports = { selectUsersById };
+const emptyArrayIfAuthorExists = id => {
+  return connection("users")
+    .select("*")
+    .where("username", id)
+    .then(res => {
+      if (res.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not Found" });
+      } else {
+        return [];
+      }
+    });
+};
+
+module.exports = { selectUsersById, emptyArrayIfAuthorExists };
