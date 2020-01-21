@@ -8,10 +8,10 @@ const app = require("../app");
 const connection = require("../db/connection");
 
 describe("app", () => {
-  beforeEach(function() {
+  beforeEach(() => {
     return connection.seed.run();
   });
-  after(function() {
+  after(() => {
     return connection.destroy();
   });
   describe("/api", () => {

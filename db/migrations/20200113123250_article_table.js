@@ -9,7 +9,10 @@ exports.up = function(knex) {
       .defaultTo(0);
     article_table.string("topic").references("topics.slug");
     article_table.string("author").references("users.username");
-    article_table.timestamp("created_at").defaultTo(knex.fn.now());
+    article_table
+      .timestamp("created_at")
+      .defaultTo(knex.fn.now())
+      .notNullable();
   });
 };
 
