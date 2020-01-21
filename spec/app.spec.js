@@ -105,7 +105,7 @@ describe("app", () => {
             .get("/api/articles/2")
             .expect(200)
             .then(res => {
-              console.log(res.body);
+              // console.log(res.body);
               expect(res.body.article).to.be.an("object");
               expect(res.body.article.article_id).to.equal(2);
               expect(res.body.article).to.contain.keys(
@@ -224,7 +224,7 @@ describe("app", () => {
               .send({ author: "rogersop", comment: "please dont work" })
               .expect(404)
               .then(res => {
-                console.log(res);
+                // console.log(res);
                 expect(res.body.msg).to.equal("Route Not Found");
               });
           });

@@ -9,19 +9,19 @@ const patchCommentsById = (req, res, next) => {
       res.status(200).send({ comment });
     })
     .catch(err => {
-      console.log(err, "error in patchCommentsById");
+      // console.log(err, "error in patchCommentsById");
       next(err);
     });
 };
 
 const delCommentById = (req, res, next) => {
-  console.log(req.params);
+  // console.log(req.params);
   removeCommentById(req.params)
     .then(() => {
       res.status(204).send({});
     })
     .catch(err => {
-      console.log(err, "error in deleteCommentsById");
+      // console.log(err, "error in deleteCommentsById");
       next(err);
     });
 };

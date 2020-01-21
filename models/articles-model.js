@@ -25,7 +25,7 @@ const selectArticles = ({ sort_by, order, author, topic }) => {
     })
     .then(res => {
       if (res.length === 0 && topic) {
-        console.log(topic);
+        // console.log(topic);
         return emptyArrayIfTopicExists(topic);
       }
       if (res.length === 0 && !author) {
