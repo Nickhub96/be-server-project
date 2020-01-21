@@ -185,7 +185,7 @@ describe("app", () => {
             });
         });
         describe("/comments", () => {
-          it("POST:201 responds with the article that has had another comment added into it", () => {
+          it.only("POST:201 responds with the article that has had another comment added into it", () => {
             return request(app)
               .post("/api/articles/5/comments")
               .send({
@@ -228,7 +228,7 @@ describe("app", () => {
                 expect(res.body.msg).to.equal("Route Not Found");
               });
           });
-          it.only("POST:404 responds with the correct error message when an invalid url", () => {
+          it("POST:404 responds with the correct error message when an invalid url", () => {
             return request(app)
               .post("/api/articles/100000/comments")
               .send({ author: "rogersop", comment: "please dont work" })

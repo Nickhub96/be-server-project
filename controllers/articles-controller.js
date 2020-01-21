@@ -42,12 +42,12 @@ const patchArticlesById = (req, res, next) => {
 const postCommentsByArtId = (req, res, next) => {
   // console.log(req.body, "Hello controller");
   insertCommentsByArtId(req.body, req.params)
-    .then(([comment]) => {
-      console.log(comment);
+    .then(comment => {
+      console.log({ comment });
       res.status(201).send({ comment });
     })
     .catch(err => {
-      console.log(err, "error in postComments");
+      // console.log(err, "error in postComments");
       next(err);
     });
 };
