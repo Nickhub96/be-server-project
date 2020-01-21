@@ -156,16 +156,7 @@ describe("app", () => {
               );
             });
         });
-        // it.only("GET:405 responds with the article unchanged", () => {
-        //   return request(app)
-        //     .get("/api/articles/1")
-        //     .send()
-        //     .expect(405)
-        //     .then(res => {
-        //       expect(res.body.msg).to.equal("Method Not Found");
-        //     });
-        // });
-        it.only("status:405", () => {
+        it("status:405 responds with a 405 when given a method to do tht has not been created", () => {
           const invalidMethods = ["delete"];
           const methodPromises = invalidMethods.map(method => {
             return request(app)
@@ -175,7 +166,6 @@ describe("app", () => {
                 expect(msg).to.equal("Method Not Found");
               });
           });
-          // methodPromises -> [ Promise { <pending> }, Promise { <pending> }, Promise { <pending> } ]
           return Promise.all(methodPromises);
         });
         it("GET:400 responds with the correct error message when given an invalid article_id", () => {
@@ -234,8 +224,30 @@ describe("app", () => {
               .send({ author: "rogersop", comment: "please dont work" })
               .expect(404)
               .then(res => {
+                console.log(res);
                 expect(res.body.msg).to.equal("Route Not Found");
               });
+          });
+          it.only("POST:404 responds with the correct error message when an invalid url", () => {
+            return request(app)
+              .post("/api/articles/100000/comments")
+              .send({ author: "rogersop", comment: "please dont work" })
+              .expect(404)
+              .then(res => {
+                expect(res.body.msg).to.equal("Route Not Found");
+              });
+          });
+          it("status:405 responds with a 405 when told to use a method that has not been created", () => {
+            const invalidMethods = ["delete", "patch"];
+            const methodPromises = invalidMethods.map(method => {
+              return request(app)
+                [method]("/api/articles/1/comments")
+                .expect(405)
+                .then(({ body: { msg } }) => {
+                  expect(msg).to.equal("Method Not Found");
+                });
+            });
+            return Promise.all(methodPromises);
           });
           it("GET:200 responds with an array of comments from the given article_id", () => {
             return request(app)

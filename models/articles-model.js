@@ -92,6 +92,7 @@ const insertCommentsByArtId = (body, params) => {
     })
     .returning("*")
     .then(res => {
+      console.log(res);
       if (res.length === 0) {
         return Promise.reject({ status: 404, msg: "Not Found" });
       } else {
