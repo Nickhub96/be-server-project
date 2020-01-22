@@ -18,7 +18,7 @@ const delCommentById = (req, res, next) => {
   // console.log(req.params);
   removeCommentById(req.params)
     .then(() => {
-      res.status(204).send({});
+      res.sendStatus(204);
     })
     .catch(err => {
       // console.log(err, "error in deleteCommentsById");

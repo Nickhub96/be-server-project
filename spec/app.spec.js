@@ -185,7 +185,7 @@ describe("app", () => {
             });
         });
         describe("/comments", () => {
-          it.only("POST:201 responds with the comment that was posted", () => {
+          it("POST:201 responds with the comment that was posted", () => {
             return request(app)
               .post("/api/articles/1/comments")
               .send({
@@ -289,6 +289,11 @@ describe("app", () => {
           return request(app)
             .delete("/api/comments/1")
             .expect(204);
+        });
+        it("DELETE:404 wjen trying to delete a comment that doesnt exist", () => {
+          return request(app)
+            .delete("/api/comments/100000")
+            .expect(404);
         });
       });
     });

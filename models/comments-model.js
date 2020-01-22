@@ -20,11 +20,16 @@ const updateCommentsById = (body, params) => {
 
 const removeCommentById = params => {
   const { comment_id } = params;
-  // console.log(comment_id);
   return connection("comments")
     .where("comments.comment_id", comment_id)
     .del()
-    .returning("*");
+    .then(res => {
+      if (res === 0) {
+        return Promise.reject({ status: 404, msg: "Not Found" });
+      } else {
+        return true;
+      }
+    });
 };
 
 module.exports = { updateCommentsById, removeCommentById };
