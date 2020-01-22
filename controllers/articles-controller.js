@@ -46,7 +46,7 @@ const postCommentsByArtId = (req, res, next) => {
       res.status(201).send({ comment });
     })
     .catch(err => {
-      console.log(err, "error in postComments");
+      // console.log(err, "error in postComments");
       next(err);
     });
 };

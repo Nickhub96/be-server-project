@@ -3,8 +3,9 @@ exports.up = function(knex) {
     topic_table
       .string("slug")
       .primary()
-      .unique();
-    topic_table.string("description");
+      .unique()
+      .notNullable();
+    topic_table.string("description").notNullable();
   });
 };
 

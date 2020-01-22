@@ -18,7 +18,7 @@ const psqlErrorHandler = (err, req, res, next) => {
       "23502": 400,
       "23503": 404
     };
-    console.log(err.message, "error here");
+    // console.log(err.message, "error here");
     res.status(psqlCode[err.code]).send({
       msg: err.message.split(" - ")[1] || "Bad Request"
     });
