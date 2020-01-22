@@ -184,13 +184,13 @@ describe("app", () => {
               expect(res.body.msg).to.equal("Not Found");
             });
         });
-        describe.only("/comments", () => {
-          it("POST:201 responds with the article that has had another comment added into it", () => {
+        describe("/comments", () => {
+          it.only("POST:201 responds with the comment that was posted", () => {
             return request(app)
-              .post("/api/articles/5/comments")
+              .post("/api/articles/1/comments")
               .send({
-                username: "rogersop",
-                comment:
+                username: "butter_bridge",
+                body:
                   "This is just a short comment that I want to add to check my test works, and im able to post comments when I use an article id to do so. Hope this works."
               })
               .expect(201)
@@ -228,7 +228,7 @@ describe("app", () => {
                 expect(res.body.msg).to.equal("Route Not Found");
               });
           });
-          it.only("POST:404 responds with the correct error message when passed a non existent article_id", () => {
+          it("POST:404 responds with the correct error message when passed a non existent article_id", () => {
             return request(app)
               .post("/api/articles/100000/comments")
               .send({ username: "rogersop", comment: "please dont work" })

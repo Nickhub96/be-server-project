@@ -80,13 +80,13 @@ const updateArticlesById = (body, params) => {
 
 const insertCommentsByArtId = (body, params) => {
   const { article_id } = params;
-  const { username, comment } = body;
+  const { username } = body;
   return connection("comments")
     .where("comments.article_id", article_id)
     .insert({
       article_id,
       author: username,
-      body: comment
+      body: body.body
     })
     .returning("*")
     .then(res => {
