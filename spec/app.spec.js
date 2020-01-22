@@ -184,12 +184,12 @@ describe("app", () => {
               expect(res.body.msg).to.equal("Not Found");
             });
         });
-        describe("/comments", () => {
-          it.only("POST:201 responds with the article that has had another comment added into it", () => {
+        describe.only("/comments", () => {
+          it("POST:201 responds with the article that has had another comment added into it", () => {
             return request(app)
               .post("/api/articles/5/comments")
               .send({
-                author: "rogersop",
+                username: "rogersop",
                 comment:
                   "This is just a short comment that I want to add to check my test works, and im able to post comments when I use an article id to do so. Hope this works."
               })
@@ -221,20 +221,22 @@ describe("app", () => {
           it("POST:404 responds with the correct error message when an invalid url", () => {
             return request(app)
               .post("/api/articles/3/commentzzzz")
-              .send({ author: "rogersop", comment: "please dont work" })
+              .send({ username: "rogersop", comment: "please dont work" })
               .expect(404)
               .then(res => {
                 // console.log(res);
                 expect(res.body.msg).to.equal("Route Not Found");
               });
           });
-          it("POST:404 responds with the correct error message when an invalid url", () => {
+          it.only("POST:404 responds with the correct error message when passed a non existent article_id", () => {
             return request(app)
               .post("/api/articles/100000/comments")
-              .send({ author: "rogersop", comment: "please dont work" })
+              .send({ username: "rogersop", comment: "please dont work" })
               .expect(404)
               .then(res => {
-                expect(res.body.msg).to.equal("Route Not Found");
+                expect(res.body.msg).to.equal(
+                  'insert or update on table "comments" violates foreign key constraint "comments_article_id_foreign"'
+                );
               });
           });
           it("status:405 responds with a 405 when told to use a method that has not been created", () => {

@@ -79,18 +79,18 @@ const updateArticlesById = (body, params) => {
 };
 
 const insertCommentsByArtId = (body, params) => {
-  const time = Date.now();
   const { article_id } = params;
-  const { author, comment } = body;
+  const { username, comment } = body;
   return connection("comments")
     .where("comments.article_id", article_id)
     .insert({
       article_id,
-      author,
+      author: username,
       body: comment
     })
     .returning("*")
     .then(res => {
+      console.log(res, "res response");
       if (res.length === 0) {
         return Promise.reject({ status: 404, msg: "Not Found" });
       } else {

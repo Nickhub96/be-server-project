@@ -13,12 +13,14 @@ const customErrorHandler = (err, req, res, next) => {
 const psqlErrorHandler = (err, req, res, next) => {
   if (err.code) {
     const psqlCode = {
-      "22P02": "Bad Request",
-      "42703": "Undefined Column",
-      "23503": "Bad Request"
+      "22P02": 400,
+      "42703": 400,
+      "23502": 400,
+      "23503": 404
     };
-    res.status(400).send({
-      msg: psqlCode[err.code]
+    console.log(err.message, "error here");
+    res.status(psqlCode[err.code]).send({
+      msg: err.message.split(" - ")[1] || "Bad Request"
     });
   } else {
     next(err);
