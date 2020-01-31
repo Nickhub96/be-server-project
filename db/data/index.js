@@ -5,7 +5,8 @@ const ENV = process.env.NODE_ENV || "development";
 
 const data = {
   test: testData,
-  development: devData
+  development: devData,
+  production: devData
 };
 
 module.exports = data[ENV];

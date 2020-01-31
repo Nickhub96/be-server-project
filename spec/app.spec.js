@@ -15,6 +15,14 @@ describe("app", () => {
     return connection.destroy();
   });
   describe("/api", () => {
+    it.only("GET:200 responds with the endpoints.json file", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then(res => {
+          expect(res.body).to.contain.key("GET /api");
+        });
+    });
     describe("/topics", () => {
       it("GET:200 - responds with an array of all the topics", () => {
         return request(app)
@@ -105,7 +113,7 @@ describe("app", () => {
             .get("/api/articles/2")
             .expect(200)
             .then(res => {
-              // console.log(res.body);
+              console.log(res.body.article);
               expect(res.body.article).to.be.an("object");
               expect(res.body.article.article_id).to.equal(2);
               expect(res.body.article).to.contain.keys(
@@ -256,6 +264,7 @@ describe("app", () => {
               .get("/api/articles/5/comments?sort_by=created_at&order=desc")
               .expect(200)
               .then(res => {
+                // console.log(res.body);
                 expect(res.body.comments).to.be.an("array");
                 expect(res.body.comments).to.be.sortedBy("created_at", {
                   descending: true
@@ -275,12 +284,13 @@ describe("app", () => {
     });
     describe("/comments", () => {
       describe("/:comment_id", () => {
-        it("PATCH:200 responds with the updated comment that has been patched", () => {
+        it.only("PATCH:200 responds with the updated comment that has been patched", () => {
           return request(app)
             .patch("/api/comments/4")
             .send({ inc_votes: 6 })
             .expect(200)
             .then(res => {
+              console.log(res.body.comment);
               expect(res.body.comment.comment_id).to.equal(4);
               expect(res.body.comment.votes).to.equal(-94);
             });
