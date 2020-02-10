@@ -300,7 +300,7 @@ describe("app", () => {
             .delete("/api/comments/1")
             .expect(204);
         });
-        it("DELETE:404 wjen trying to delete a comment that doesnt exist", () => {
+        it("DELETE:404 when trying to delete a comment that doesnt exist", () => {
           return request(app)
             .delete("/api/comments/100000")
             .expect(404);
