@@ -11,11 +11,8 @@ describe("app", () => {
   beforeEach(() => {
     return connection.seed.run();
   });
-  after(() => {
-    return connection.destroy();
-  });
   describe("/api", () => {
-    it.only("GET:200 responds with the endpoints.json file", () => {
+    it("GET:200 responds with the endpoints.json file", () => {
       return request(app)
         .get("/api")
         .expect(200)
@@ -113,7 +110,7 @@ describe("app", () => {
             .get("/api/articles/2")
             .expect(200)
             .then(res => {
-              console.log(res.body.article);
+              // console.log(res.body.article);
               expect(res.body.article).to.be.an("object");
               expect(res.body.article.article_id).to.equal(2);
               expect(res.body.article).to.contain.keys(
@@ -128,7 +125,7 @@ describe("app", () => {
               );
             });
         });
-        it("PATCH:200 responds with the article we have made a change to", () => {
+        it.only("PATCH:200 responds with the article we have made a change to", () => {
           return request(app)
             .patch("/api/articles/2")
             .send({ inc_votes: 6 })
@@ -290,7 +287,7 @@ describe("app", () => {
             .send({ inc_votes: 6 })
             .expect(200)
             .then(res => {
-              console.log(res.body.comment);
+              // console.log(res.body.comment);
               expect(res.body.comment.comment_id).to.equal(4);
               expect(res.body.comment.votes).to.equal(-94);
             });

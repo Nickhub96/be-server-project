@@ -5,17 +5,19 @@ exports.formatDates = list => {
 };
 
 exports.makeRefObj = list => {
+  // console.log(list);
   const newObj = {};
   list.forEach(data => {
     newObj[data.title] = data.article_id;
   });
-
+  // console.log(newObj);
   return newObj;
 };
 
 exports.formatComments = (comments, articleRef) => {
   const newComments = [];
   comments.forEach(newComment => {
+    // console.log(newComment);
     const duplicate = { ...newComment };
     duplicate.article_id = articleRef[duplicate.belongs_to];
     delete duplicate.belongs_to;
@@ -24,5 +26,6 @@ exports.formatComments = (comments, articleRef) => {
     duplicate.created_at = new Date(duplicate.created_at);
     newComments.push(duplicate);
   });
+  // console.log(newComments);
   return newComments;
 };

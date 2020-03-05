@@ -7,6 +7,8 @@ const {
 
 const { formatDates, formatComments, makeRefObj } = require("../utils/utils");
 
+console.log(process.env.NODE_ENV);
+
 exports.seed = function(knex) {
   return knex.migrate
     .rollback()
@@ -25,6 +27,7 @@ exports.seed = function(knex) {
         .returning("*");
     })
     .then(articleRows => {
+      // console.log(articleRows);
       const articleRef = makeRefObj(articleRows);
       const formattedComments = formatComments(commentData, articleRef);
       // console.log(formattedComments);

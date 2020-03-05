@@ -4,9 +4,9 @@ In this repo you can use all the endpoint i have created to collect different se
 
 ## Requirements
 
-you will need to install a few applications and packages:
+you will need to install :
 -express
--postgress
+-postgres
 -knex
 -supertest
 -mocha
