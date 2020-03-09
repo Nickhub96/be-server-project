@@ -1,6 +1,6 @@
 # Back-End NC-News
 
-In this repo you can use all the endpoint i have created to collect different sets of Data. The data tables have been created using SQL, Knex is used through out the repo to help with the collection of data through the various endpoints.
+In this repo you can use all the endpoints I have created to collect different sets of Data. The data tables have been created using SQL, Knex is used through out the repo to help with the collection of data through the various endpoints.
 
 ## Requirements
 
@@ -12,12 +12,11 @@ you will need to install :
 -mocha
 -chai
 
-examples:
-npm i mocha chai -D
-npm i express
-npm i pg
-npm i supertest
-npm i knex
+install all with
+
+```bash
+npm install
+```
 
 ## Endpoints
 
@@ -152,7 +151,7 @@ npm i knex
 
 Github - https://github.com/Nickhub96/be-server-project
 
-Heroku -
+Heroku - https://git.heroku.com/be-server-project.git
 
 ## Authors
 
